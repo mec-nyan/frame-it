@@ -8,6 +8,7 @@ I use it mainly to separate logic sections in a single file of code and for head
 ## ToC
 
 - [Examples](#examples)
+- [Installation](#installation)
 - [Basic usage](#basic-usage)
 - [API](#api)
 
@@ -79,6 +80,24 @@ def some_func(n: int) -> bool:
     '''some_func takes an int and returns a bool (duh!)'''
 
     pass
+```
+
+## Installation
+
+### Using Lazy
+
+Example in `.config/nvim/lua/plugins/frameit.lua`
+
+```lua
+return {
+	-- ╭────────────────────────────╮
+	-- │ This is how you use it! 💖 │
+	-- ╰────────────────────────────╯
+	"mec-nyan/frame-it",
+	config = function ()
+		require"frame-it"
+	end
+}
 ```
 
 ## Basic usage:
