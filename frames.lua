@@ -1,0 +1,196 @@
+--[[
+
+Draw a nice frame around your comments so you can use them
+to separate or highlight sections of code.
+
+It works with:
+	- Lua ("--")
+	- C, C++, Rust, Go, (Java?) ("//")
+	- Python, Bash, Sh ("#")
+
+But it's easy to add more!
+
+It uses Unicode (UTF-8) so it will render well everywhere.
+Unless for some reason your terminal, editor, IDE or whatever you're using to display
+your code doesn't support Unicode but come on... it's 2025 and I won't fall back to ASCII...
+
+Examples:
+
+-- A regular comment. Nothing to see here.
+
+-- ╭────────────────────────╮
+-- │ Now this looks better! │
+-- ╰────────────────────────╯
+
+// ┏━━━━━━━━━━━━━━━━━━┓
+// ┃ What about this? ┃
+// ┗━━━━━━━━━━━━━━━━━━┛
+
+# ╔══════════════════════════════════════════╗
+# ║ Maybe this is what you're looking for... ║
+# ╚══════════════════════════════════════════╝
+
+TODO: Multi line comment (using vim selection).
+
+TODO: Add something fun like:
+
+  ▗▄▖               ▗▄▖               ▗▄▖               ▗▄▖
+ ▟███▙             ▟███▙             ▟███▙             ▟███▙
+▐▛ ▜▛ ▘           ▐▛ ▜▛ ▘           ▐▛ ▜▛ ▘           ▐▛ ▜▛ ▘
+█▙▝▟▙▝▟           █▙▝▟▙▝▟           █▙▝▟▙▝▟           █▙▝▟▙▝▟
+███████           ███████           ███████           ███████
+▛▝█ █▘▜           ▛▝█ █▘▜           ▛▝█ █▘▜           ▛▝█ █▘▜
+
+Or icons like  ,  , or 💖, etc
+
+Enjoy!
+
+--]]
+
+local hline_thin = "─"
+local hline_dotted = "╌"
+local hline_fat = "━"
+local hline_dotted_fat = "╍"
+local hline_double = "═"
+
+local vline_thin = "│"
+local vline_dotted = "┆"
+local vline_fat = "┃"
+local vline_dotted_fat = "┇"
+local vline_double = "║"
+
+local topleft_sharp = "┌"
+local topleft_rounded = "╭"
+local topleft_fat = "┏"
+local topleft_double = "╔"
+
+local topright_sharp = "┐"
+local topright_rounded = "╮"
+local topright_fat = "┓"
+local topright_double = "╗"
+
+local botleft_sharp = "└"
+local botleft_rounded = "╰"
+local botleft_fat = "┗"
+local botleft_double = "╚"
+
+local botright_sharp = "┘"
+local botright_rounded = "╯"
+local botright_fat = "┛"
+local botright_double = "╝"
+
+local sharp = 'sharp'
+local rounded = 'rounded'
+local dotted = 'dotted'
+local dotted_rounded = 'dotted_rounded'
+local dotted_fat = 'dotted_fat'
+local fat = 'fat'
+local double = 'double'
+
+local function get_frame(style)
+	if style == sharp then
+		return hline_thin, vline_thin, topleft_sharp, topright_sharp, botleft_sharp, botright_sharp
+	elseif style == rounded then
+		return hline_thin, vline_thin, topleft_rounded, topright_rounded, botleft_rounded, botright_rounded
+	elseif style == dotted then
+		return hline_dotted, vline_dotted, topleft_sharp, topright_sharp, botleft_sharp, botright_sharp
+	elseif style == dotted_rounded then
+		return hline_dotted, vline_dotted, topleft_rounded, topright_rounded, botleft_rounded, botright_rounded
+	elseif style == fat then
+		return hline_fat, vline_fat, topleft_fat, topright_fat, botleft_fat, botright_fat
+	elseif style == dotted_fat then
+		return hline_dotted_fat, vline_dotted_fat, topleft_fat, topright_fat, botleft_fat, botright_fat
+	elseif style == double then
+		return hline_double, vline_double, topleft_double, topright_double, botleft_double, botright_double
+	end
+end
+
+--╭───────────────────────────────────────╮
+--│ Let's try single line comments first. │
+--╰───────────────────────────────────────╯
+function FrameMe(style, ft)
+	local hline, vline, topleft, topright, botleft, botright = get_frame(style)
+
+	local line = vim.api.nvim_get_current_line()
+
+	local comment_init
+	local comment_match
+	if ft == "lua" then
+		comment_init = "-- "
+		comment_match = "^%-%-%s*"
+	elseif ft == "c" or ft == "cpp" or ft == "rust" or ft == "go" then
+		comment_init = "// "
+		comment_match = "^//%s*"
+	elseif ft == "bash" or ft == "sh" or ft == "python" then
+		comment_init = "# "
+		comment_match = "^#%s*"
+	elseif ft == "vim" then
+		comment_init = '" '
+		comment_match = '^"%s*'
+	else
+		print("File type not supported")
+		return
+	end
+
+	if line:match(comment_match) then
+		local text = line:gsub(comment_match, "")
+		local width = #text + 2 -- Put one space on each side.
+		local top = comment_init .. topleft .. string.rep(hline, width) .. topright
+		local mid = comment_init .. vline .. " " .. text .. " " .. vline
+		local bot = comment_init .. botleft .. string.rep(hline, width) .. botright
+
+		-- Clear current line.
+		vim.api.nvim_set_current_line("")
+		-- Add newly, decorated comment.
+		vim.api.nvim_buf_set_lines(
+			0,
+			vim.api.nvim_win_get_cursor(0)[1] - 1,
+			vim.api.nvim_win_get_cursor(0)[1],
+			false,
+			{ top, mid, bot }
+		)
+	else
+		print("Not a comment line" .. ft)
+	end
+end
+
+function FrameMeSharp()
+	FrameMe(sharp, vim.bo.filetype)
+end
+
+function FrameMeRounded()
+	FrameMe(rounded, vim.bo.filetype)
+end
+
+function FrameMeDotted()
+	FrameMe(dotted, vim.bo.filetype)
+end
+
+function FrameMeDottedRounded()
+	FrameMe(dotted_rounded, vim.bo.filetype)
+end
+
+function FrameMeDottedFat()
+	FrameMe(dotted_fat, vim.bo.filetype)
+end
+
+function FrameMeFat()
+	FrameMe(fat, vim.bo.filetype)
+end
+
+function FrameMeDouble()
+	FrameMe(double, vim.bo.filetype)
+end
+
+M = {
+	FrameMe = FrameMe,
+	FrameMeSharp = FrameMeSharp,
+	FrameMeRounded = FrameMeRounded,
+	FrameMeDotted = FrameMeDotted,
+	FrameMeDottedRounded = FrameMeDottedRounded,
+	FrameMeDottedFat = FrameMeDottedFat,
+	FrameMeFat = FrameMeFat,
+	FrameMeDouble = FrameMeDouble,
+}
+
+return M
