@@ -87,6 +87,11 @@ local dotted_fat = 'dotted_fat'
 local fat = 'fat'
 local double = 'double'
 
+-- ╭───────────╮
+-- │ get_frame │
+-- ╰───────────╯
+--
+-- get_frame returns the character for the frame of the desired style.
 local function get_frame(style)
 	if style == sharp then
 		return hline_thin, vline_thin, topleft_sharp, topright_sharp, botleft_sharp, botright_sharp
@@ -105,9 +110,12 @@ local function get_frame(style)
 	end
 end
 
---╭───────────────────────────────────────╮
---│ Let's try single line comments first. │
---╰───────────────────────────────────────╯
+-- ╭─────────╮
+-- │ FrameMe │
+-- ╰─────────╯
+--
+-- FrameMe add a frame around your comment according to selected style and detected language.
+-- It's meant mainly for internal use.
 function FrameMe(style, ft)
 	local hline, vline, topleft, topright, botleft, botright = get_frame(style)
 
@@ -154,30 +162,51 @@ function FrameMe(style, ft)
 	end
 end
 
+-- ┌──────────────┐
+-- │ FrameMeSharp │
+-- └──────────────┘
 function FrameMeSharp()
 	FrameMe(sharp, vim.bo.filetype)
 end
 
+-- ╭────────────────╮
+-- │ FrameMeRounded │
+-- ╰────────────────╯
 function FrameMeRounded()
 	FrameMe(rounded, vim.bo.filetype)
 end
 
+-- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+-- ┆ FrameMeDotted ┆
+-- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 function FrameMeDotted()
 	FrameMe(dotted, vim.bo.filetype)
 end
 
+-- ╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
+-- ┆ FrameMeDottedRounded ┆
+-- ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯
 function FrameMeDottedRounded()
 	FrameMe(dotted_rounded, vim.bo.filetype)
 end
 
+-- ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+-- ┇ FrameMeDottedFat ┇
+-- ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 function FrameMeDottedFat()
 	FrameMe(dotted_fat, vim.bo.filetype)
 end
 
+-- ┏━━━━━━━━━━━━┓
+-- ┃ FrameMeFat ┃
+-- ┗━━━━━━━━━━━━┛
 function FrameMeFat()
 	FrameMe(fat, vim.bo.filetype)
 end
 
+-- ╔═══════════════╗
+-- ║ FrameMeDouble ║
+-- ╚═══════════════╝
 function FrameMeDouble()
 	FrameMe(double, vim.bo.filetype)
 end
