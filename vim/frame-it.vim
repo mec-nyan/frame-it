@@ -105,21 +105,45 @@ function! GetFrame(style)
 
 endfunction
 
+" ╭────────────────────────────────╮
+" │ FrameMe is the generic framer. │
+" ╰────────────────────────────────╯
 function! FrameMe(style, ft)
-	let [ l:hline, l:vline, l:topleft, l:topright, l:botleft, l:botright ] = GetFrame("sharp")
+	let [ l:hline, l:vline, l:topleft, l:topright, l:botleft, l:botright ] = GetFrame(a:style)
 
 	let l:line = getline(".")
 
 	let l:comment_init = ""
-	let l:comment_match = ""
 
 	if a:ft == "lua"
-		echo "Lua detected"
-	elseif a:ft == "go"
-		echo "Go detected"
+		let comment_init = "--"
+	elseif a:ft == "c" || a:ft == "cpp" || a:ft == "rust" || a:ft == "go"
+		let comment_init = "//"
+	elseif a:ft == "bash" || a:ft == "sh" || a:ft == "python"
+		let comment_init = "#"
+	elseif a:ft == "vim"
+		let comment_init = '"' 
 	else
-		echo "Other detected"
+		echo "Lang not supported"
+		return
 	endif
 
-	echo "Frame: " .. hline .. vline .. topleft .. topright .. "."
+	if line !~ "^" .. l:comment_init
+		echo "it is NOT a comment"
+		return
+	endif
+
+	let l:text = ""
+	let l:text = substitute(l:line, '^' .. comment_init .. '\s*', '', '')
+	let l:width = len(l:text) + 2
+
+	let comment_init = comment_init .. " "
+	let l:top = comment_init .. topleft .. repeat(hline, l:width) .. topright
+	let l:mid = comment_init .. vline .. " " .. l:text .. " " .. vline
+	let l:bot = comment_init .. botleft .. repeat(hline, l:width) .. botright
+
+	call setline(".", l:top)
+	call append(".", l:bot)
+	call append(".", l:mid)
+
 endfunction
