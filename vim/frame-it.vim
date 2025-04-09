@@ -54,6 +54,10 @@ let s:dotted_fat = 'dotted_fat'
 let s:fat = 'fat'
 let s:double = 'double'
 
+" ╭──────────╮
+" │ GetFrame │
+" ╰──────────╯
+" GetFrame returns the characters needed for that frame style.
 function! GetFrame(style)
 	let l:hline_thin = "─"
 	let l:hline_dotted = "╌"
@@ -105,9 +109,12 @@ function! GetFrame(style)
 
 endfunction
 
-" ╭────────────────────────────────╮
-" │ FrameMe is the generic framer. │
-" ╰────────────────────────────────╯
+" ╭─────────╮
+" │ FrameMe │
+" ╰─────────╯
+" FrameMe encapsulates the logic to add a specific frame according
+" to the selected style and the filetypte. It's meant to be used
+" internally by the provided API.
 function! FrameMe(style, ft)
 	let [ l:hline, l:vline, l:topleft, l:topright, l:botleft, l:botright ] = GetFrame(a:style)
 
@@ -146,4 +153,53 @@ function! FrameMe(style, ft)
 	call append(".", l:bot)
 	call append(".", l:mid)
 
+endfunction
+
+" ┌──────────────┐
+" │ FrameMeSharp │
+" └──────────────┘
+function! FrameMeSharp()
+	call FrameMe(s:sharp, &filetype)
+endfunction
+
+" ╭────────────────╮
+" │ FrameMeRounded │
+" ╰────────────────╯
+function! FrameMeRounded()
+	call FrameMe(s:rounded, &filetype)
+endfunction
+
+" ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+" ┆ FrameMeDotted ┆
+" └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+function! FrameMeDotted()
+	call FrameMe(s:dotted, &filetype)
+endfunction
+
+" ╭╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╮
+" ┆ FrameMeDottedRounded ┆
+" ╰╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╯
+function! FrameMeDottedRounded()
+	call FrameMe(s:dotted_rounded, &filetype)
+endfunction
+
+" ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
+" ┇ FrameMeDottedFat ┇
+" ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+function! FrameMeDottedFat()
+	call FrameMe(s:dotted_fat, &filetype)
+endfunction
+
+" ┏━━━━━━━━━━━━┓
+" ┃ FrameMeFat ┃
+" ┗━━━━━━━━━━━━┛
+function! FrameMeFat()
+	call FrameMe(s:fat, &filetype)
+endfunction
+
+" ╔═══════════════╗
+" ║ FrameMeDouble ║
+" ╚═══════════════╝
+function! FrameMeDouble()
+	call FrameMe(s:double, &filetype)
 endfunction
