@@ -84,7 +84,7 @@ def some_func(n: int) -> bool:
 
 ## Installation
 
-### Using Lazy
+### Using Lazy 
 
 Example in `.config/nvim/lua/plugins/frameit.lua`
 
@@ -99,6 +99,39 @@ return {
 	end
 }
 ```
+
+### Using Vim/Neovim native packages
+
+#### Vim
+
+```sh
+git clone https://github.com/mec-nyan/frame-it.git .vim/pack/frameit/start/frameit
+```
+
+That way you can keep it updated!
+
+Or if you want, you can just put it in `.vim/plugin/frame-it.vim` or even just source the file.
+
+#### Neovim
+
+```sh
+git clone https://github.com/mec-nyan/frame-it.git .config/nvim/pack/frameit/start/frameit
+```
+
+Also, if you just want to try it out, you can just source the file (either one!)
+
+```vim
+:source frame-it.lua
+```
+
+### Both
+
+Open the corresponding file (the Lua version won't work with Vim) and just:
+
+```vim
+:source %
+```
+
 
 ## Basic usage:
 
