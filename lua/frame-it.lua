@@ -111,24 +111,24 @@ local function get_frame(style)
 end
 
 local function get_comment_style(ft)
-	local comment_init
+	local comment_marker
 	local comment_match
 
 	if ft == "lua" then
-		comment_init = "-- "
-		comment_match = "^%-%-%s*"
+		comment_marker = "--"
+		comment_match = "^%s*%-%-%s*"
 	elseif ft == "c" or ft == "cpp" or ft == "rust" or ft == "go" then
-		comment_init = "// "
-		comment_match = "^//%s*"
+		comment_marker = "//"
+		comment_match = "^%s*//%s*"
 	elseif ft == "bash" or ft == "sh" or ft == "python" then
-		comment_init = "# "
-		comment_match = "^#%s*"
+		comment_marker = "#"
+		comment_match = "^%s*#%s*"
 	elseif ft == "vim" then
-		comment_init = '" '
-		comment_match = '^"%s*'
+		comment_marker = '"'
+		comment_match = '^%s*"%s*'
 	end
 
-	return comment_init, comment_match
+	return comment_marker, comment_match
 end
 
 -- ╭─────────╮
@@ -142,18 +142,19 @@ function FrameMe(style, ft)
 
 	local line = vim.api.nvim_get_current_line()
 
-	local comment_init, comment_match = get_comment_style(ft)
-	if comment_init == nil then
+	local comment_marker, comment_match = get_comment_style(ft)
+	if comment_marker == nil then
 		print("Filetype not supported", ft)
 		return
 	end
 
 	if line:match(comment_match) then
+		local prefix = line:match(comment_match)
 		local text = line:gsub(comment_match, "")
 		local width = #text + 2 -- Put one space on each side.
-		local top = comment_init .. topleft .. string.rep(hline, width) .. topright
-		local mid = comment_init .. vline .. " " .. text .. " " .. vline
-		local bot = comment_init .. botleft .. string.rep(hline, width) .. botright
+		local top = prefix .. topleft .. string.rep(hline, width) .. topright
+		local mid = prefix .. vline .. " " .. text .. " " .. vline
+		local bot = prefix .. botleft .. string.rep(hline, width) .. botright
 
 		-- Clear current line.
 		vim.api.nvim_set_current_line("")
