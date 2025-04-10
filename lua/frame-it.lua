@@ -131,13 +131,33 @@ local function get_comment_style(ft)
 	return comment_marker, comment_match
 end
 
-local function get_cols(line)
-	-- TODO: Count the columns!!!
-	-- Some symbols will count as more columns that they actually occupy!
-	return #line
+-- ┌──────────────────────────────┐
+-- │ This now can handle this  ! │
+-- └──────────────────────────────┘
+-- But we still need a way to handle emoji (one char, two cols...)
+function utf8len(line)
+    local len = 0
+    local i = 1
+    local bytes = #line
+    while i <= bytes do
+        local c = line:byte(i)
+        if c < 0x80 then
+            i = i + 1
+        elseif c < 0xE0 then
+            i = i + 2
+        elseif c < 0xF0 then
+            i = i + 3
+        elseif c < 0xF8 then
+            i = i + 4
+        else
+            -- Invalid UTF-8 sequence
+            return nil, "Invalid UTF-8 character at byte index " .. i
+        end
+        len = len + 1
+    end
+    return len
 end
 
-	-- A comment.
 -- ╭─────────╮
 -- │ FrameMe │
 -- ╰─────────╯
@@ -158,7 +178,7 @@ function FrameMe(style, ft)
 	if line:match(comment_match) then
 		local prefix = line:match(comment_match)
 		local text = line:gsub(comment_match, "")
-		local width = get_cols(text) + 1 -- Extra space at the end.
+		local width = utf8len(text) + 1 -- Extra space at the end.
 
 		line = prefix .. " " .. vline .. text .. " " .. vline
 
