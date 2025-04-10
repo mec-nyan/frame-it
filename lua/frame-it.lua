@@ -110,19 +110,10 @@ local function get_frame(style)
 	end
 end
 
--- ╭─────────╮
--- │ FrameMe │
--- ╰─────────╯
---
--- FrameMe add a frame around your comment according to selected style and detected language.
--- It's meant mainly for internal use.
-function FrameMe(style, ft)
-	local hline, vline, topleft, topright, botleft, botright = get_frame(style)
-
-	local line = vim.api.nvim_get_current_line()
-
+local function get_comment_style(ft)
 	local comment_init
 	local comment_match
+
 	if ft == "lua" then
 		comment_init = "-- "
 		comment_match = "^%-%-%s*"
@@ -135,8 +126,25 @@ function FrameMe(style, ft)
 	elseif ft == "vim" then
 		comment_init = '" '
 		comment_match = '^"%s*'
-	else
-		print("File type not supported")
+	end
+
+	return comment_init, comment_match
+end
+
+-- ╭─────────╮
+-- │ FrameMe │
+-- ╰─────────╯
+--
+-- FrameMe add a frame around your comment according to selected style and detected language.
+-- It's meant mainly for internal use.
+function FrameMe(style, ft)
+	local hline, vline, topleft, topright, botleft, botright = get_frame(style)
+
+	local line = vim.api.nvim_get_current_line()
+
+	local comment_init, comment_match = get_comment_style(ft)
+	if comment_init == nil then
+		print("Filetype not supported", ft)
 		return
 	end
 
