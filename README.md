@@ -118,7 +118,13 @@ Or if you want, you can just put it in `.vim/plugin/frame-it.vim` or even just s
 git clone https://github.com/mec-nyan/frame-it.git .config/nvim/pack/frameit/start/frameit
 ```
 
-Also, if you just want to try it out, you can just source the file (either one!)
+And then from **Neovim**:
+
+```lua
+:lua require "frame-it"
+```
+
+If you just want to try it out, you can just source the file (either one!)
 
 ```vim
 :source frame-it.lua
