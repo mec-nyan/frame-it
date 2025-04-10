@@ -116,21 +116,28 @@ local function get_comment_style(ft)
 
 	if ft == "lua" then
 		comment_marker = "--"
-		comment_match = "^%s*%-%-%s*"
+		comment_match = "^%s*%-%-"
 	elseif ft == "c" or ft == "cpp" or ft == "rust" or ft == "go" then
 		comment_marker = "//"
-		comment_match = "^%s*//%s*"
+		comment_match = "^%s*//"
 	elseif ft == "bash" or ft == "sh" or ft == "python" then
 		comment_marker = "#"
-		comment_match = "^%s*#%s*"
+		comment_match = "^%s*#"
 	elseif ft == "vim" then
 		comment_marker = '"'
-		comment_match = '^%s*"%s*'
+		comment_match = '^%s*"'
 	end
 
 	return comment_marker, comment_match
 end
 
+local function get_cols(line)
+	-- TODO: Count the columns!!!
+	-- Some symbols will count as more columns that they actually occupy!
+	return #line
+end
+
+	-- A comment.
 -- ╭─────────╮
 -- │ FrameMe │
 -- ╰─────────╯
@@ -151,20 +158,19 @@ function FrameMe(style, ft)
 	if line:match(comment_match) then
 		local prefix = line:match(comment_match)
 		local text = line:gsub(comment_match, "")
-		local width = #text + 2 -- Put one space on each side.
-		local top = prefix .. topleft .. string.rep(hline, width) .. topright
-		local mid = prefix .. vline .. " " .. text .. " " .. vline
-		local bot = prefix .. botleft .. string.rep(hline, width) .. botright
+		local width = get_cols(text) + 1 -- Extra space at the end.
 
-		-- Clear current line.
-		vim.api.nvim_set_current_line("")
-		-- Add newly, decorated comment.
+		line = prefix .. " " .. vline .. text .. " " .. vline
+
+		local top = prefix .. " " .. topleft .. string.rep(hline, width) .. topright
+		local bot = prefix .. " " .. botleft .. string.rep(hline, width) .. botright
+
 		vim.api.nvim_buf_set_lines(
 			0,
 			vim.api.nvim_win_get_cursor(0)[1] - 1,
 			vim.api.nvim_win_get_cursor(0)[1],
 			false,
-			{ top, mid, bot }
+			{ top, line, bot }
 		)
 	else
 		print("Not a comment line" .. ft)
