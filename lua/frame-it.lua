@@ -47,6 +47,8 @@ Enjoy!
 
 --]]
 
+local bit = require("bit")
+
 local hline_thin = "─"
 local hline_dotted = "╌"
 local hline_fat = "━"
@@ -136,28 +138,56 @@ end
 -- └──────────────────────────────┘
 -- But we still need a way to handle emoji (one char, two cols...)
 function utf8len(line)
-    local len = 0
-    local i = 1
-    local bytes = #line
-    while i <= bytes do
-        local c = line:byte(i)
-        if c < 0x80 then
-            i = i + 1
-        elseif c < 0xE0 then
-            i = i + 2
-        elseif c < 0xF0 then
-            i = i + 3
-        elseif c < 0xF8 then
-            i = i + 4
-        else
-            -- Invalid UTF-8 sequence
-            return nil, "Invalid UTF-8 character at byte index " .. i
-        end
-        len = len + 1
-    end
-    return len
+	local len = 0
+	local i = 1
+	local bytes = #line
+	while i <= bytes do
+		local c = line:byte(i)
+		if c < 0x80 then
+			i = i + 1
+		elseif c < 0xE0 then
+			i = i + 2
+		elseif c < 0xF0 then
+			i = i + 3
+		elseif c < 0xF8 then
+			i = i + 4
+		else
+			-- Invalid UTF-8 sequence
+			return nil, "Invalid UTF-8 character at byte index " .. i
+		end
+		len = len + 1
+	end
+	return len
 end
 
+local function utf8_to_codepoint(s)
+	local b1 = string.byte(s, 1)
+
+	if b1 < 0x80 then
+		return b1
+	elseif b1 < 0xE0 then
+		local b2 = string.byte(s, 2)
+		return bit.bor(
+			bit.lshift(bit.band(b1, 0x1F), 6),
+			bit.band(b2, 0x3F)
+		)
+	elseif b1 < 0xF0 then
+		local b2, b3 = string.byte(s, 2, 3)
+		return bit.bor(
+			bit.lshift(bit.band(b1, 0x0F), 12),
+			bit.lshift(bit.band(b2, 0x3F), 6),
+			bit.band(b3, 0x3F)
+		)
+	else
+		local b2, b3, b4 = string.byte(s, 2, 4)
+		return bit.bor(
+			bit.lshift(bit.band(b1, 0x07), 18),
+			bit.lshift(bit.band(b2, 0x3F), 12),
+			bit.lshift(bit.band(b3, 0x3F), 6),
+			bit.band(b4, 0x3F)
+		)
+	end
+end
 -- ╭─────────╮
 -- │ FrameMe │
 -- ╰─────────╯
