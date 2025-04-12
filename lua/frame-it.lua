@@ -161,12 +161,6 @@ function utf8len(line)
 	return len
 end
 
-function WcWidth(wchar)
-	os.setlocale("en_US.UTF-8", "all")
-	ffi.cdef "int wcwidth(wchar_t wc);"
-	return ffi.C.wcwidth(utf8_to_codepoint(wchar))
-end
-
 local function utf8_to_codepoint(s)
 	local b1 = string.byte(s, 1)
 
@@ -195,6 +189,39 @@ local function utf8_to_codepoint(s)
 		)
 	end
 end
+
+local function utf8_iter(str)
+	local i = 1
+	local len = #str
+	return function()
+		if i > len then return nil end
+
+		local c = string.byte(str, i)
+		local n = (c < 0x80) and 1
+			or (c < 0xE0) and 2
+			or (c < 0xF0) and 3
+			or 4
+
+		local substr = str:sub(i, i + n - 1)
+		i = i + n
+		return substr, utf8_to_codepoint(substr)
+	end
+end
+
+local function wcwidth(codepoint)
+	os.setlocale("en_US.UTF-8", "all")
+	ffi.cdef "int wcwidth(wchar_t wc);"
+	return ffi.C.wcwidth(codepoint)
+end
+
+local function get_columns(str)
+	local count = 0
+	for _, codepoint in utf8_iter(str) do
+		count = count + wcwidth(codepoint)
+	end
+	return count
+end
+
 -- ╭─────────╮
 -- │ FrameMe │
 -- ╰─────────╯
@@ -215,7 +242,7 @@ function FrameMe(style, ft)
 	if line:match(comment_match) then
 		local prefix = line:match(comment_match)
 		local text = line:gsub(comment_match, "")
-		local width = utf8len(text) + 1 -- Extra space at the end.
+		local width = get_columns(text) + 1 -- Extra space at the end.
 
 		line = prefix .. " " .. vline .. text .. " " .. vline
 
