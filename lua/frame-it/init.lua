@@ -1,5 +1,5 @@
-local frameme = require "frameme"
-local borders = require "borders"
+local frameme = require "frame-it.frameme"
+local borders = require "frame-it.borders"
 
 -- ┌──────────────┐
 -- │ FrameMeSharp │

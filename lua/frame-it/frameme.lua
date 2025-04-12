@@ -1,8 +1,8 @@
 local M = {}
 
-local comment = require "comment"
-local border = require "borders"
-local columns = require "columns"
+local comment = require "frame-it.comment"
+local border = require "frame-it.borders"
+local columns = require "frame-it.columns"
 
 -- ╭─────────╮
 -- │ FrameMe │
