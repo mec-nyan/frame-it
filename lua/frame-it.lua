@@ -47,7 +47,7 @@ Enjoy!
 
 --]]
 
-local bit = require("bit")
+local bit = require "bit"
 local ffi = require "ffi"
 
 local hline_thin = "─"
@@ -113,6 +113,7 @@ local function get_frame(style)
 	end
 end
 
+-- get_comment_style selects the appropiate comment initialiser for the current language.
 local function get_comment_style(ft)
 	local comment_marker
 	local comment_match
@@ -134,33 +135,7 @@ local function get_comment_style(ft)
 	return comment_marker, comment_match
 end
 
--- ┌──────────────────────────────┐
--- │ This now can handle this  ! │
--- └──────────────────────────────┘
--- But we still need a way to handle emoji (one char, two cols...)
-function utf8len(line)
-	local len = 0
-	local i = 1
-	local bytes = #line
-	while i <= bytes do
-		local c = line:byte(i)
-		if c < 0x80 then
-			i = i + 1
-		elseif c < 0xE0 then
-			i = i + 2
-		elseif c < 0xF0 then
-			i = i + 3
-		elseif c < 0xF8 then
-			i = i + 4
-		else
-			-- Invalid UTF-8 sequence
-			return nil, "Invalid UTF-8 character at byte index " .. i
-		end
-		len = len + 1
-	end
-	return len
-end
-
+-- utf8_to_codepoint converts a UTF-8 character (bytes) to its corresponding Unicode code point.
 local function utf8_to_codepoint(s)
 	local b1 = string.byte(s, 1)
 
@@ -190,6 +165,7 @@ local function utf8_to_codepoint(s)
 	end
 end
 
+-- utf8_iter iterates over a sequence of codepoint instead of a sequence of bytes.
 local function utf8_iter(str)
 	local i = 1
 	local len = #str
@@ -208,18 +184,25 @@ local function utf8_iter(str)
 	end
 end
 
+-- good old wcwidth gets the printable width of a codepoint (wchar_t).
 local function wcwidth(codepoint)
 	os.setlocale("en_US.UTF-8", "all")
 	ffi.cdef "int wcwidth(wchar_t wc);"
 	return ffi.C.wcwidth(codepoint)
 end
 
+-- Finally, get_columns get_columns the number of columns that the current string occupies.
+-- Uff!
 local function get_columns(str)
 	local count = 0
 	for _, codepoint in utf8_iter(str) do
 		count = count + wcwidth(codepoint)
 	end
 	return count
+end
+
+function GetCols(str)
+	return get_columns(str)
 end
 
 -- ╭─────────╮
