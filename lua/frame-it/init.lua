@@ -51,7 +51,7 @@ function FrameMeDouble()
 end
 
 M = {
-	FrameMe = frameme.FrameMe,
+	FrameMe = function(style, lang) frameme.FrameMe(style, lang) end,
 	FrameMeSharp = FrameMeSharp,
 	FrameMeRounded = FrameMeRounded,
 	FrameMeDotted = FrameMeDotted,
