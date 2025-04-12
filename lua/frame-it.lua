@@ -48,6 +48,7 @@ Enjoy!
 --]]
 
 local bit = require("bit")
+local ffi = require "ffi"
 
 local hline_thin = "─"
 local hline_dotted = "╌"
@@ -158,6 +159,12 @@ function utf8len(line)
 		len = len + 1
 	end
 	return len
+end
+
+function WcWidth(wchar)
+	os.setlocale("en_US.UTF-8", "all")
+	ffi.cdef "int wcwidth(wchar_t wc);"
+	return ffi.C.wcwidth(utf8_to_codepoint(wchar))
 end
 
 local function utf8_to_codepoint(s)
