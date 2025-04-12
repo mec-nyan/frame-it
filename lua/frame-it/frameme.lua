@@ -8,8 +8,9 @@ local columns = require "frame-it.columns"
 -- │ FrameMe │
 -- ╰─────────╯
 --
--- FrameMe add a frame around your comment according to selected style and detected language.
--- It's meant mainly for internal use.
+-- FrameMe adds a frame around your comment according to selected style and
+-- detected language. It's meant mainly for internal use and is the base for
+-- all normal mode (linewise) frame-it functions.
 function M.FrameMe(style, ft)
 	local hline, vline, topleft, topright, botleft, botright = border.get_frame(style)
 
@@ -43,7 +44,14 @@ function M.FrameMe(style, ft)
 	end
 end
 
-function FrameMeVisual(style, ft)
+-- ╭───────────────╮
+-- │ FrameMeVisual │
+-- ╰───────────────╯
+--
+-- FrameMeVisual adds a frame around the comment(s) inside a visual selection
+-- according to the selected style and detected language. It's the base for all
+-- the visual frame-it funcions.
+function M.FrameMeVisual(style, ft)
 	local comment_marker, comment_match = comment.get_comment_style(ft)
 	if comment_marker == nil then
 		print("Filetype not supported", ft)
