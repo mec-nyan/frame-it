@@ -43,27 +43,27 @@ function M.FrameMe(style, ft)
 	end
 end
 
-function FrameMeVisual()
-	-- local style = "rounded"
-	local ft = "lua"
-
+function FrameMeVisual(style, ft)
 	local comment_marker, comment_match = comment.get_comment_style(ft)
 	if comment_marker == nil then
 		print("Filetype not supported", ft)
 		return
 	end
 
-	-- local hline, vline, topleft, topright, botleft, botright = border.get_frame(style)
+	local hline, vline, topleft, topright, botleft, botright = border.get_frame(style)
 
+	-- Get the start and end of the selection.
 	local start_pos = vim.fn.getpos("'<")[2]
 	local end_pos = vim.fn.getpos("'>")[2]
 
+	-- Copy the selected lines.
 	local lines = vim.api.nvim_buf_get_lines(0, start_pos - 1, end_pos, false)
 
+	-- Separate the "prefix" part from the rest of the text.
 	local prefixes = {}
 	local text_lines = {}
-	-- Check that every line is a comment.
 	for i, line in ipairs(lines) do
+		-- Check that every line is a comment.
 		if not line:match(comment_match) then
 			print "Not a comment."
 			return
@@ -83,7 +83,6 @@ function FrameMeVisual()
 		end
 	end
 
-	-- Add a space at the end.
 	width = width + 1
 
 	-- Right pad the strings
@@ -93,8 +92,14 @@ function FrameMeVisual()
 
 	-- Frame'em
 	for i, line in ipairs(text_lines) do
-		lines[i] = prefixes[i] .. "@" .. line .. "@"
+		lines[i] = prefixes[i] .. " " .. vline .. line .. vline
 	end
+
+	local top = prefixes[1] .. " " .. topleft .. string.rep(hline, width) .. topright
+	local bot = prefixes[1] .. " " .. botleft .. string.rep(hline, width) .. botright
+
+	table.insert(lines, 1, top)
+	table.insert(lines, bot)
 
 	vim.api.nvim_buf_set_lines(0, start_pos - 1, end_pos, false, lines)
 end
