@@ -36,6 +36,31 @@ function do_something()
 end
 ```
 
+_It works in visual mode too!_
+
+Before:
+
+```lua
+-- do_something is a function
+-- that does something.
+-- that's it!
+function do_something()
+    ...
+end
+```
+
+After:
+
+```lua
+-- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+-- ┃ do_something is a function ┃
+-- ┃ that does something.       ┃
+-- ┃ that's it!                 ┃
+-- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+function do_something()
+    ...
+end
+
 Before:
 
 ```go
@@ -194,3 +219,8 @@ The second argument is the file type:
 - lua
 - python, bash, sh
 - etc
+
+## TODO/Fixes
+
+- In visual mode, support for wide chars is broken (because of `string.format(...)`)
+- Keep the **Vim** version updated.
