@@ -3,6 +3,8 @@
 
 A simple **Vim/Neovim** plugin to highlight comments by "framing" them with different styles.
 
+> NOTE: The **Vim** version is lagging a little bit behind!
+
 I use it mainly to separate logic sections in a single file of code and for headings.
 
 ## ToC
@@ -61,7 +63,7 @@ func (f *Frame) FrameIt() string {
 Before:
 
 ```python
-# Warning! There will be dragons!
+# Warning! There will be dragons 🐉!
 
 def some_func(n: int) -> bool:
     '''some_func takes an int and returns a bool (duh!)'''
@@ -72,9 +74,9 @@ def some_func(n: int) -> bool:
 After:
 
 ```python
-# ╔═════════════════════════════════╗
-# ║ Warning! There will be dragons! ║
-# ╚═════════════════════════════════╝
+# ╔════════════════════════════════════╗
+# ║ Warning! There will be dragons 🐉! ║
+# ╚════════════════════════════════════╝
 
 def some_func(n: int) -> bool:
     '''some_func takes an int and returns a bool (duh!)'''
@@ -94,23 +96,10 @@ return {
 	-- │ This is how you use it! 💖 │
 	-- ╰────────────────────────────╯
 	"mec-nyan/frame-it",
-	config = function ()
-		require"frame-it"
-	end
 }
 ```
 
 ### Using Vim/Neovim native packages
-
-#### Vim
-
-```sh
-git clone https://github.com/mec-nyan/frame-it.git .vim/pack/frameit/start/frameit
-```
-
-That way you can keep it updated!
-
-Or if you want, you can just put it in `.vim/plugin/frame-it.vim` or even just source the file.
 
 #### Neovim
 
@@ -129,6 +118,16 @@ If you just want to try it out, you can just source the file (either one!)
 ```vim
 :source frame-it.lua
 ```
+
+#### Vim
+
+```sh
+git clone https://github.com/mec-nyan/frame-it.git .vim/pack/frameit/start/frameit
+```
+
+That way you can keep it updated!
+
+Or if you want, you can just put it in `.vim/plugin/frame-it.vim` or even just source the file.
 
 ### Both
 
