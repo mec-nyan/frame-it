@@ -9,10 +9,79 @@ I use it mainly to separate logic sections in a single file of code and for head
 
 ## ToC
 
-- [Examples](#examples)
 - [Installation](#installation)
 - [Basic usage](#basic-usage)
+- [Examples](#examples)
 - [API](#api)
+
+## Installation
+
+### Using Lazy 
+
+Example in `.config/nvim/lua/plugins/frameit.lua`
+
+```lua
+return {
+	-- ╭────────────────────────────╮
+	-- │ This is how you use it! 💖 │
+	-- ╰────────────────────────────╯
+	"mec-nyan/frame-it",
+}
+```
+
+### Using Vim/Neovim native packages
+
+#### Neovim
+
+```sh
+git clone https://github.com/mec-nyan/frame-it.git .config/nvim/pack/frameit/start/frameit
+```
+
+#### Vim
+
+```sh
+git clone https://github.com/mec-nyan/frame-it.git .vim/pack/frameit/start/frameit
+```
+
+That way you can keep it updated!
+
+Or if you want, you can just put it in `.vim/plugin/frame-it.vim` or even just source the file.
+
+### Both
+
+Open the corresponding file (the Lua version won't work with Vim) and just:
+
+```vim
+:source %
+```
+
+
+## Basic usage:
+
+> This plugin doesn't provide any keymaps, so it won't interfere with yours.
+
+It's recommended that you provide your key bindings in your configuration.
+The examples below show how to simply call these functions.
+
+
+_Write a comment:_
+```cpp
+// Something important begins here.
+```
+
+_With the cursor on that line, call one of the framing functions._
+_i.e. if using the **Lua** version:_
+
+```vim
+:lua FrameMeRounded()<CR>
+```
+
+_Result:_
+```cpp
+// ╭──────────────────────────────────╮
+// │ Something important begins here. │
+// ╰──────────────────────────────────╯
+```
 
 ## Examples
 
@@ -48,6 +117,7 @@ function do_something()
     ...
 end
 ```
+_Select the lines you want to "frame"_
 
 After:
 
@@ -109,91 +179,12 @@ def some_func(n: int) -> bool:
     pass
 ```
 
-## Installation
-
-### Using Lazy 
-
-Example in `.config/nvim/lua/plugins/frameit.lua`
-
-```lua
-return {
-	-- ╭────────────────────────────╮
-	-- │ This is how you use it! 💖 │
-	-- ╰────────────────────────────╯
-	"mec-nyan/frame-it",
-}
-```
-
-### Using Vim/Neovim native packages
-
-#### Neovim
-
-```sh
-git clone https://github.com/mec-nyan/frame-it.git .config/nvim/pack/frameit/start/frameit
-```
-
-And then from **Neovim**:
-
-```lua
-:lua require "frame-it"
-```
-
-If you just want to try it out, you can just source the file (either one!)
-
-```vim
-:source frame-it.lua
-```
-
-#### Vim
-
-```sh
-git clone https://github.com/mec-nyan/frame-it.git .vim/pack/frameit/start/frameit
-```
-
-That way you can keep it updated!
-
-Or if you want, you can just put it in `.vim/plugin/frame-it.vim` or even just source the file.
-
-### Both
-
-Open the corresponding file (the Lua version won't work with Vim) and just:
-
-```vim
-:source %
-```
-
-
-## Basic usage:
-
-> This plugin doesn't provide any keymaps, so it won't interfere with yours.
-
-It's recommended that you provide your key bindings in your configuration.
-The examples below show how to simply call these functions.
-
-
-_Write a comment:_
-```cpp
-// Something important begins here.
-```
-
-_With the cursor on that line, call one of the framing functions._
-_i.e. if using the **Lua** version:_
-
-```vim
-:lua FrameMeRounded()<CR>
-```
-
-_Result:_
-```cpp
-// ╭──────────────────────────────────╮
-// │ Something important begins here. │
-// ╰──────────────────────────────────╯
-```
-
 
 ## API
 
 The following functions are provided:
+
+### Linewise (no selection/visual)
 
 _Draw a frame with:_
 
@@ -206,13 +197,29 @@ _Draw a frame with:_
 - FrameMeDouble() _double outline_
 - FrameMe(string, string) _generic_
 
+### Blockwise (visual mode)
+
+_Draw a frame with:_
+
+- FrameMeSharpVisual() _sharp corners_
+- FrameMeRoundedVisual() _rounded corners_
+- FrameMeDottedVisual() _dotted outline_
+- FrameMeDottedRoundedVisual() _dotted outline and rounded corners_
+- FrameMeDottedFatVisual() _dotted, thick outline_
+- FrameMeFatVisual() _thick outline_
+- FrameMeDoubleVisual() _double outline_
+- FrameMeVisual(string, string) _generic_
+
 The function _FrameMe(string, string)_ is the base of the others and serves also for testing.
 
 Its first argument is a (constant) string that selects the style:
 - "sharp"
 - "rounded"
 - "dotted"
-- etc
+- "dotted_rounded"
+- "dotted_fat"
+- "fat"
+- "double"
 
 The second argument is the file type:
 - c, c++, go, rust
@@ -222,5 +229,5 @@ The second argument is the file type:
 
 ## TODO/Fixes
 
-- In visual mode, support for wide chars is broken (because of `string.format(...)`)
+- [Fixed] In visual mode, support for wide chars is broken (because of `string.format(...)`)
 - Keep the **Vim** version updated.
