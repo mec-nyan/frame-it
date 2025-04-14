@@ -1,5 +1,10 @@
 local M = {}
 
+-- ╔═════════════════════════════════╗
+-- ║ This is a comment made with 💖. ║
+-- ║ Yes!                            ║
+-- ╚═════════════════════════════════╝
+
 local comment = require "frame-it.comment"
 local border = require "frame-it.borders"
 local columns = require "frame-it.columns"
@@ -95,7 +100,9 @@ function M.FrameMeVisual(style, ft)
 
 	-- Right pad the strings
 	for i, line in ipairs(text_lines) do
-		text_lines[i] = string.format(string.format("%%-%ds", width), line)
+		local cols = columns.get_columns(line)
+		local padding = string.rep(" ", width - cols)
+		text_lines[i] = line .. padding
 	end
 
 	-- Frame'em
