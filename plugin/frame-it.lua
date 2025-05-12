@@ -47,30 +47,19 @@ Enjoy!
 
 --]]
 
-require "frame-it"
+local frame_it = require "frame-it"
 
 -- TODO: Add a setup option if the user doesn't want these commands created and prefer
 -- to invoke the Lua functions directly or create keymaps to them.
 
--- ┌───────────────────────┐
--- │ Normal mode commands. │
--- └───────────────────────┘
-vim.api.nvim_create_user_command('FrameMeSharp', FrameMeSharp, {})
-vim.api.nvim_create_user_command('FrameMeRounded', FrameMeRounded, {})
-vim.api.nvim_create_user_command('FrameMeDotted', FrameMeDotted, {})
-vim.api.nvim_create_user_command('FrameMeDottedRounded', FrameMeDottedRounded, {})
-vim.api.nvim_create_user_command('FrameMeDottedFat', FrameMeDottedFat, {})
-vim.api.nvim_create_user_command('FrameMeFat', FrameMeFat, {})
-vim.api.nvim_create_user_command('FrameMeDouble', FrameMeDouble, {})
+-- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+-- ┃ These commands now work in both normal and visual mode! ┃
+-- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+vim.api.nvim_create_user_command('FrameMeSharp', frame_it.FrameMeSharp, {range = true})
+vim.api.nvim_create_user_command('FrameMeRounded', frame_it.FrameMeRounded, {range = true})
+vim.api.nvim_create_user_command('FrameMeDotted', frame_it.FrameMeDotted, {range = true})
+vim.api.nvim_create_user_command('FrameMeDottedRounded', frame_it.FrameMeDottedRounded, {range = true})
+vim.api.nvim_create_user_command('FrameMeDottedFat', frame_it.FrameMeDottedFat, {range = true})
+vim.api.nvim_create_user_command('FrameMeFat', frame_it.FrameMeFat, {range = true})
+vim.api.nvim_create_user_command('FrameMeDouble', frame_it.FrameMeDouble, {range = true})
 
--- TODO: Fix the call to visual functions.
--- ┌───────────────────────┐
--- │ Visual mode commands. │
--- └───────────────────────┘
-vim.api.nvim_create_user_command('FrameMeSharpVisual', FrameMeSharpVisual, {})
-vim.api.nvim_create_user_command('FrameMeRoundedVisual', FrameMeRoundedVisual, {})
-vim.api.nvim_create_user_command('FrameMeDottedVisual', FrameMeDottedVisual, {})
-vim.api.nvim_create_user_command('FrameMeDottedRoundedVisual', FrameMeDottedRoundedVisual, {})
-vim.api.nvim_create_user_command('FrameMeDottedFatVisual', FrameMeDottedFatVisual, {})
-vim.api.nvim_create_user_command('FrameMeFatVisual', FrameMeFatVisual, {})
-vim.api.nvim_create_user_command('FrameMeDoubleVisual', FrameMeDoubleVisual, {})
