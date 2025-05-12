@@ -70,10 +70,9 @@ _Write a comment:_
 ```
 
 _With the cursor on that line, call one of the framing functions._
-_i.e. if using the **Lua** version:_
 
 ```vim
-:lua FrameMeRounded()<CR>
+:FrameMeRounded<CR>
 ```
 
 _Result:_
@@ -84,6 +83,11 @@ _Result:_
 ```
 
 ## Examples
+
+### TODO:
+
+Replace these examples with images, since the font in Github are not the best.
+
 
 Before:
 
@@ -117,6 +121,7 @@ function do_something()
     ...
 end
 ```
+
 _Select the lines you want to "frame"_
 
 After:
@@ -130,6 +135,7 @@ After:
 function do_something()
     ...
 end
+```
 
 Before:
 
@@ -187,13 +193,13 @@ The following commands are provided. They work in both NORMAL *and* VISUAL modes
 
 ### _Draw a frame with:_
 
-- FrameMeSharp _sharp corners_
-- FrameMeRounded _rounded corners_
-- FrameMeDotted _dotted outline_
-- FrameMeDottedRounded _dotted outline and rounded corners_
-- FrameMeDottedFat _dotted, thick outline_
-- FrameMeFat _thick outline_
-- FrameMeDouble _double outline_
+- FrameMeSharp (_sharp corners_)
+- FrameMeRounded (_rounded corners_)
+- FrameMeDotted (_dotted outline_)
+- FrameMeDottedRounded (_dotted outline and rounded corners_)
+- FrameMeDottedFat (_dotted, thick outline_)
+- FrameMeFat (_thick outline_)
+- FrameMeDouble (_double outline_)
 
 ## Lua API
 
@@ -207,15 +213,15 @@ frame_it.__FrameMe("fat", "cpp")
 
 The module exports the following functions:
 
-- FrameMeSharp _sharp corners_
-- FrameMeRounded _rounded corners_
-- FrameMeDotted _dotted outline_
-- FrameMeDottedRounded _dotted outline and rounded corners_
-- FrameMeDottedFat _dotted, thick outline_
-- FrameMeFat _thick outline_
-- FrameMeDouble _double outline_
-- __FrameMe
-- __FrameMeVisual
+- FrameMeSharp (_sharp corners_)
+- FrameMeRounded (_rounded corners_)
+- FrameMeDotted (_dotted outline_)
+- FrameMeDottedRounded (_dotted outline and rounded corners_)
+- FrameMeDottedFat (_dotted, thick outline_)
+- FrameMeFat (_thick outline_)
+- FrameMeDouble (_double outline_)
+- \_\_FrameMe (_generic_)
+- \_\_FrameMeVisual (_generic_)
 
 They all accept an optional argument: "opts: (table)". Thay way we can call them in both NORMAL and VISUAL modes.
 
@@ -240,7 +246,7 @@ The second argument (also a string) is the file type:
 
 The third argument is an optional table. Neovim will fill this parameter when invoking the function via command.
 
-## TODO/Fixes
+## TODO / Fixes
 
 - [Fixed] In visual mode, support for wide chars is broken (because of `string.format(...)`)
 - Keep the **Vim** version updated.
