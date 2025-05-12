@@ -56,6 +56,6 @@ end
 
 M.__FrameMeVisual = function (style, lang, opts) frameme.FrameMeVisual(style, lang, opts) end
 
-M.__FrameMe = function(style, lang) frameme.FrameMe(style, lang) end
+M.__FrameMe = function(style, lang, opts) frameme.FrameMe(style, lang, opts) end
 
 return M
