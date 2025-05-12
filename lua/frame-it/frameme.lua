@@ -12,11 +12,22 @@ local columns = require "frame-it.columns"
 -- ╭─────────╮
 -- │ FrameMe │
 -- ╰─────────╯
+function M.FrameMe(style, ft, opts)
+	if opts == nil or opts.line1 == nil or opts.line2 == nil then
+		M.FrameMeNormal(style, ft)
+	else
+		M.FrameMeVisual(style, ft, opts)
+	end
+end
+
+-- ╭───────────────╮
+-- │ FrameMeNormal │
+-- ╰───────────────╯
 --
 -- FrameMe adds a frame around your comment according to selected style and
 -- detected language. It's meant mainly for internal use and is the base for
 -- all normal mode (linewise) frame-it functions.
-function M.FrameMe(style, ft)
+function M.FrameMeNormal(style, ft)
 	local hline, vline, topleft, topright, botleft, botright = border.get_frame(style)
 
 	local line = vim.api.nvim_get_current_line()
@@ -56,7 +67,8 @@ end
 -- FrameMeVisual adds a frame around the comment(s) inside a visual selection
 -- according to the selected style and detected language. It's the base for all
 -- the visual frame-it funcions.
-function M.FrameMeVisual(style, ft)
+function M.FrameMeVisual(style, ft, opts)
+	opts = opts or {}
 	local comment_marker, comment_match = comment.get_comment_style(ft)
 	if comment_marker == nil then
 		print("Filetype not supported", ft)
@@ -66,8 +78,8 @@ function M.FrameMeVisual(style, ft)
 	local hline, vline, topleft, topright, botleft, botright = border.get_frame(style)
 
 	-- Get the start and end of the selection.
-	local start_pos = vim.fn.getpos("'<")[2]
-	local end_pos = vim.fn.getpos("'>")[2]
+	local start_pos = opts.line1 or vim.fn.getpos("'<")[2]
+	local end_pos = opts.line2 or vim.fn.getpos("'>")[2]
 
 	-- Copy the selected lines.
 	local lines = vim.api.nvim_buf_get_lines(0, start_pos - 1, end_pos, false)
