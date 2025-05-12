@@ -182,52 +182,67 @@ def some_func(n: int) -> bool:
 
 ## API
 
-The following functions are provided:
+The following commands are provided. They work in both NORMAL *and* VISUAL modes.
 
-### Linewise (no selection/visual)
 
-_Draw a frame with:_
+### _Draw a frame with:_
 
-- FrameMeSharp() _sharp corners_
-- FrameMeRounded() _rounded corners_
-- FrameMeDotted() _dotted outline_
-- FrameMeDottedRounded() _dotted outline and rounded corners_
-- FrameMeDottedFat() _dotted, thick outline_
-- FrameMeFat() _thick outline_
-- FrameMeDouble() _double outline_
-- FrameMe(string, string) _generic_
+- FrameMeSharp _sharp corners_
+- FrameMeRounded _rounded corners_
+- FrameMeDotted _dotted outline_
+- FrameMeDottedRounded _dotted outline and rounded corners_
+- FrameMeDottedFat _dotted, thick outline_
+- FrameMeFat _thick outline_
+- FrameMeDouble _double outline_
 
-### Blockwise (visual mode)
+## Lua API
 
-_Draw a frame with:_
+You can access the lua functions directly if you want (i.e. to create a custom command or mapping).
 
-- FrameMeSharpVisual() _sharp corners_
-- FrameMeRoundedVisual() _rounded corners_
-- FrameMeDottedVisual() _dotted outline_
-- FrameMeDottedRoundedVisual() _dotted outline and rounded corners_
-- FrameMeDottedFatVisual() _dotted, thick outline_
-- FrameMeFatVisual() _thick outline_
-- FrameMeDoubleVisual() _double outline_
-- FrameMeVisual(string, string) _generic_
+```lua
+local frame_it = require "frame-it"
 
-The function _FrameMe(string, string)_ is the base of the others and serves also for testing.
+frame_it.__FrameMe("fat", "cpp")
+```
+
+The module exports the following functions:
+
+- FrameMeSharp _sharp corners_
+- FrameMeRounded _rounded corners_
+- FrameMeDotted _dotted outline_
+- FrameMeDottedRounded _dotted outline and rounded corners_
+- FrameMeDottedFat _dotted, thick outline_
+- FrameMeFat _thick outline_
+- FrameMeDouble _double outline_
+- __FrameMe
+- __FrameMeVisual
+
+They all accept an optional argument: "opts: (table)". Thay way we can call them in both NORMAL and VISUAL modes.
+
+The functions that start with "__" are mainly provided for testing purposes (hence their name).
+
+The function `FrameMe(style: string, lang: string[, opts: table])` is the base of the others and serves also for testing.
 
 Its first argument is a (constant) string that selects the style:
-- "sharp"
-- "rounded"
-- "dotted"
-- "dotted_rounded"
-- "dotted_fat"
-- "fat"
-- "double"
+- sharp
+- rounded
+- dotted
+- dotted_rounded
+- dotted_fat
+- fat
+- double
 
-The second argument is the file type:
+The second argument (also a string) is the file type:
 - c, c++, go, rust
 - lua
 - python, bash, sh
 - etc
 
+The third argument is an optional table. Neovim will fill this parameter when invoking the function via command.
+
 ## TODO/Fixes
 
 - [Fixed] In visual mode, support for wide chars is broken (because of `string.format(...)`)
 - Keep the **Vim** version updated.
+- [Fixed] Range error in visual mode.
+- [Fixed] Use the same names/commands in normal and visual modes.
