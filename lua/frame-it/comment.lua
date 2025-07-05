@@ -11,7 +11,7 @@ function M.get_comment_style(ft)
 	elseif ft == "c" or ft == "cpp" or ft == "rust" or ft == "go" then
 		comment_marker = "//"
 		comment_match = "^%s*//"
-	elseif ft == "bash" or ft == "sh" or ft == "python" then
+	elseif ft == "bash" or ft == "sh" or ft == "python" or ft == "swayconfig" then
 		comment_marker = "#"
 		comment_match = "^%s*#"
 	elseif ft == "vim" then
